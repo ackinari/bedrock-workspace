@@ -43,6 +43,9 @@ export async function initWorkspace() {
     await workspaceEmitter.clone(workspaceDir);
     
     console.log(chalk.green("Workspace downloaded successfully!"));
+    
+    // Clean up git-related files immediately after download
+    await cleanupGitFiles(workspaceDir);
     console.log("");
 
     // Install dependencies
@@ -84,9 +87,6 @@ export async function initWorkspace() {
       console.log(chalk.white("npx degit ackinari/bedrock-workspace-libraries workspace/libraries"));
       console.log(chalk.green("Workspace will remain without git repository."));
     }
-
-    // Clean up git-related files from workspace
-    await cleanupGitFiles(workspaceDir);
 
     // Prompt to open workspace
     const { openWorkspace } = await inquirer.prompt([
@@ -174,21 +174,26 @@ async function cleanupGitFiles(workspaceDir) {
   try {
     console.log(chalk.blue("Cleaning up git-related files..."));
     
-    const filesToRemove = ['.gitignore', '.gitmodules'];
+    const filesToRemove = ['.gitignore', '.gitmodules', '.gitattributes', '.github'];
     let removedFiles = [];
     
     for (const fileName of filesToRemove) {
       const filePath = path.join(workspaceDir, fileName);
       if (fs.existsSync(filePath)) {
-        await fs.remove(filePath);
-        removedFiles.push(fileName);
+        try {
+          await fs.remove(filePath);
+          removedFiles.push(fileName);
+          console.log(chalk.gray(`  Removed: ${fileName}`));
+        } catch (fileError) {
+          console.log(chalk.yellow(`  Failed to remove ${fileName}: ${fileError.message}`));
+        }
       }
     }
     
     if (removedFiles.length > 0) {
-      console.log(chalk.green(`Removed git files: ${removedFiles.join(', ')}`));
+      console.log(chalk.green(`Successfully removed ${removedFiles.length} git-related files`));
     } else {
-      console.log(chalk.gray("No git files found to remove"));
+      console.log(chalk.gray("No git-related files found to remove"));
     }
     
   } catch (error) {

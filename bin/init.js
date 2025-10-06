@@ -5,8 +5,6 @@ import fs from "fs";
 import chalk from "chalk";
 import { initWorkspace } from "../src/initWorkspace.js";
 import { updateWorkspace } from "../src/updateWorkspace.js";
-import { cleanWorkspace } from "../src/cleanWorkspace.js";
-import { statusWorkspace } from "../src/statusWorkspace.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
@@ -23,10 +21,6 @@ const flags = args.filter(arg => arg.startsWith('-'));
 try {
   if (flags.includes("--update") || command === 'update') {
     await updateWorkspace();
-  } else if (flags.includes("--clean") || command === 'clean') {
-    await cleanWorkspace();
-  } else if (flags.includes("--status") || command === 'status') {
-    await statusWorkspace();
   } else if (flags.includes("--help") || command === 'help') {
     showHelp();
   } else if (flags.includes("--version") || command === 'version') {
@@ -46,8 +40,6 @@ function showHelp() {
   console.log(chalk.white.bold("Commands:"));
   console.log("  init     Initialize a new workspace (default)");
   console.log("  update   Update existing workspace");
-  console.log("  clean    Clean workspace cache and temporary files");
-  console.log("  status   Show workspace status and information");
   console.log("  help     Show this help message");
   console.log("  version  Show version information");
   console.log("");
@@ -59,7 +51,6 @@ function showHelp() {
   console.log("  bedrock-workspace");
   console.log("  bedrock-workspace init");
   console.log("  bedrock-workspace update");
-  console.log("  bedrock-workspace status");
   console.log("");
   console.log(chalk.gray("For more information, visit:"));
   console.log(chalk.blue("https://github.com/ackinari/bedrock-workspace"));

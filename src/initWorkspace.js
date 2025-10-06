@@ -1,11 +1,9 @@
 import fs from "fs-extra";
 import path from "path";
 import chalk from "chalk";
-import simpleGit from "simple-git";
 import inquirer from "inquirer";
 import { execSync } from "child_process";
-
-const WORKSPACE_REPO = "https://github.com/ackinari/VSCode-Workspace.git";
+import degit from "degit";
 
 export async function initWorkspace() {
   const cwd = process.cwd();
@@ -37,19 +35,14 @@ export async function initWorkspace() {
   }
 
   try {
-    console.log(chalk.blue("Cloning workspace repository..."));
-    console.log(chalk.gray(`Repository: ${WORKSPACE_REPO}`));
+    console.log(chalk.blue("Downloading workspace template..."));
+    console.log(chalk.gray("Repository: https://github.com/ackinari/VSCode-Workspace"));
     
-    const git = simpleGit();
-    await git.clone(WORKSPACE_REPO, workspaceDir, ['--depth', '1']);
-
-    // Remove .git folder to make it a fresh workspace
-    const gitDir = path.join(workspaceDir, '.git');
-    if (fs.existsSync(gitDir)) {
-      await fs.remove(gitDir);
-    }
-
-    console.log(chalk.green("Workspace cloned successfully!"));
+    // Use degit to download without .git folder
+    const workspaceEmitter = degit("ackinari/VSCode-Workspace");
+    await workspaceEmitter.clone(workspaceDir);
+    
+    console.log(chalk.green("Workspace downloaded successfully!"));
     console.log("");
 
     // Install dependencies
@@ -73,13 +66,8 @@ export async function initWorkspace() {
     // Show workspace information
     showWorkspaceInfo(workspaceDir);
 
-    // Initialize git repository for submodules
-    console.log("");
-    console.log(chalk.blue("Initializing git repository..."));
-    const workspaceGit = simpleGit(workspaceDir);
-    await workspaceGit.init();
-
     // Prompt to download libraries
+    console.log("");
     const { downloadLibraries } = await inquirer.prompt([
       {
         type: 'confirm',
@@ -90,10 +78,11 @@ export async function initWorkspace() {
     ]);
 
     if (downloadLibraries) {
-      await setupLibraries(workspaceDir, workspaceGit);
+      await setupLibraries(workspaceDir);
     } else {
-      console.log(chalk.gray("Libraries skipped. You can add them later with:"));
-      console.log(chalk.white("git submodule add https://github.com/ackinari/bedrock-workspace-libraries libraries"));
+      console.log(chalk.gray("Libraries skipped. You can add them later by running:"));
+      console.log(chalk.white("npx degit ackinari/bedrock-workspace-libraries workspace/libraries"));
+      console.log(chalk.green("Workspace will remain without git repository."));
     }
 
     // Prompt to open workspace
@@ -153,70 +142,28 @@ function showWorkspaceInfo(workspaceDir) {
   }
 }
 
-async function setupLibraries(workspaceDir, workspaceGit) {
+async function setupLibraries(workspaceDir) {
   try {
-    console.log(chalk.blue("Setting up shared libraries..."));
+    console.log(chalk.blue("Downloading shared libraries..."));
+    console.log(chalk.gray("Repository: https://github.com/ackinari/bedrock-workspace-libraries"));
     
-    // Check if git is configured
-    const isGitConfigured = await checkGitConfiguration();
-    if (!isGitConfigured) {
-      console.log(chalk.yellow("Git is not configured. Please configure git first:"));
-      console.log(chalk.white("git config --global user.name \"Your Name\""));
-      console.log(chalk.white("git config --global user.email \"your.email@example.com\""));
-      console.log("");
-      
-      const { continueWithoutGit } = await inquirer.prompt([
-        {
-          type: 'confirm',
-          name: 'continueWithoutGit',
-          message: 'Continue without setting up libraries?',
-          default: false
-        }
-      ]);
-      
-      if (!continueWithoutGit) {
-        console.log(chalk.gray("Please configure git and run the setup again."));
-        return;
-      }
-    }
-
     // Remove existing libraries folder if it exists
     const librariesDir = path.join(workspaceDir, 'libraries');
     if (fs.existsSync(librariesDir)) {
       await fs.remove(librariesDir);
     }
 
-    // Add submodule
-    console.log(chalk.blue("Adding libraries submodule..."));
-    await workspaceGit.submoduleAdd('https://github.com/ackinari/bedrock-workspace-libraries', 'libraries');
+    // Use degit to download libraries without .git folder
+    const librariesEmitter = degit("ackinari/bedrock-workspace-libraries");
+    await librariesEmitter.clone(librariesDir);
     
-    // Initialize and update submodules
-    console.log(chalk.blue("Initializing submodules..."));
-    await workspaceGit.subModule(['update', '--init', '--recursive']);
-    
-    console.log(chalk.green("Libraries setup completed successfully!"));
+    console.log(chalk.green("Libraries downloaded successfully!"));
     
   } catch (error) {
-    console.log(chalk.yellow("Warning: Failed to setup libraries automatically."));
-    console.log(chalk.gray("You can set them up manually later with:"));
-    console.log(chalk.white("cd workspace"));
-    console.log(chalk.white("git submodule add https://github.com/ackinari/bedrock-workspace-libraries libraries"));
-    console.log(chalk.white("git submodule update --init --recursive"));
+    console.log(chalk.yellow("Warning: Failed to download libraries automatically."));
+    console.log(chalk.gray("You can download them manually later with:"));
+    console.log(chalk.white("npx degit ackinari/bedrock-workspace-libraries workspace/libraries"));
     console.log(chalk.gray(`Error: ${error.message}`));
-  }
-}
-
-async function checkGitConfiguration() {
-  try {
-    const git = simpleGit();
-    const config = await git.listConfig();
-    
-    const hasUserName = config.all['user.name'];
-    const hasUserEmail = config.all['user.email'];
-    
-    return hasUserName && hasUserEmail;
-  } catch (error) {
-    return false;
   }
 }
 

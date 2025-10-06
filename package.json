@@ -7,7 +7,7 @@
   "main": "src/index.js",
   "type": "module",
   "bin": {
-    "bedrock-workspace": "bin/init.js"
+    "create-bedrock-workspace": "bin/init.js"
   },
   "scripts": {
     "init": "node ./bin/init.js",

@@ -1,6 +1,6 @@
 {
   "name": "@ackinari/create-bedrock-workspace",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI utility to initialize the bedrock-workspace.",
   "author": "aKiNaRi",
   "license": "MIT",

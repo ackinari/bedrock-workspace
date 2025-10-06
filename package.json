@@ -1,0 +1,43 @@
+{
+  "name": "@akinari/bedrock-workspace",
+  "version": "1.0.0",
+  "description": "CLI utility to initialize the bedrock-workspace.",
+  "author": "aKiNaRi",
+  "license": "MIT",
+  "main": "src/index.js",
+  "type": "module",
+  "bin": {
+    "bedrock-workspace": "./bin/init.js"
+  },
+  "scripts": {
+    "init": "node ./bin/init.js",
+    "update": "node ./bin/init.js --update",
+    "clean": "node ./bin/init.js --clean",
+    "status": "node ./bin/init.js --status"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "simple-git": "^3.24.0",
+    "inquirer": "^9.2.12",
+    "fs-extra": "^11.1.1"
+  },
+  "keywords": [
+    "minecraft",
+    "bedrock",
+    "typescript",
+    "javascript",
+    "workspace",
+    "development"
+],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ackinari/bedrock-workspace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ackinari/bedrock-workspace/issues"
+  },
+  "homepage": "https://github.com/ackinari/bedrock-workspace#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

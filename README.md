@@ -7,36 +7,8 @@ CLI utility to initialize and manage Minecraft Bedrock TypeScript development wo
 Install the package using npm:
 
 ```bash
-npm install @akinari/bedrock-workspace
+npm init @akinari/bedrock-workspace
 ```
-
-## Quick Start
-
-1. **Initialize a new workspace**:
-   ```bash
-   npm run init
-   ```
-
-2. **Navigate to your workspace**:
-   ```bash
-   cd workspace
-   ```
-
-3. **Create your first project**:
-   ```bash
-   npm run new-project
-   ```
-
-4. **Start developing**:
-   ```bash
-   npm run local-deploy
-   ```
-
-## Commands
-- `npm run init` - Initialize a new Bedrock workspace in the current directory.
-- `npm run update` - Update an existing workspace to the latest version.
-- `npm run clean` - Clean workspace cache and temporary files.
-- `npm run status` - Display comprehensive workspace information.
 
 ## Workspace Structure
 
@@ -106,5 +78,5 @@ The workspace comes pre-configured with:
 ## Links
 
 - [GitHub Repository](https://github.com/ackinari/bedrock-workspace)
-- [npm Package](https://www.npmjs.com/package/@ackinari/bedrock-workspace)
+- [npm Package](https://www.npmjs.com/package/@ackinari/create-bedrock-workspace)
 - [Issues](https://github.com/ackinari/bedrock-workspace/issues)

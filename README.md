@@ -7,7 +7,7 @@ CLI utility to initialize and manage Minecraft Bedrock TypeScript development wo
 Install the package using npm:
 
 ```bash
-npm init @akinari/bedrock-workspace
+npm init @ackinari/bedrock-workspace
 ```
 
 ## Workspace Structure

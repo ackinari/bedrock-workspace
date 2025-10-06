@@ -85,6 +85,9 @@ export async function initWorkspace() {
       console.log(chalk.green("Workspace will remain without git repository."));
     }
 
+    // Clean up git-related files from workspace
+    await cleanupGitFiles(workspaceDir);
+
     // Prompt to open workspace
     const { openWorkspace } = await inquirer.prompt([
       {
@@ -164,6 +167,32 @@ async function setupLibraries(workspaceDir) {
     console.log(chalk.gray("You can download them manually later with:"));
     console.log(chalk.white("npx degit ackinari/bedrock-workspace-libraries workspace/libraries"));
     console.log(chalk.gray(`Error: ${error.message}`));
+  }
+}
+
+async function cleanupGitFiles(workspaceDir) {
+  try {
+    console.log(chalk.blue("Cleaning up git-related files..."));
+    
+    const filesToRemove = ['.gitignore', '.gitmodules'];
+    let removedFiles = [];
+    
+    for (const fileName of filesToRemove) {
+      const filePath = path.join(workspaceDir, fileName);
+      if (fs.existsSync(filePath)) {
+        await fs.remove(filePath);
+        removedFiles.push(fileName);
+      }
+    }
+    
+    if (removedFiles.length > 0) {
+      console.log(chalk.green(`Removed git files: ${removedFiles.join(', ')}`));
+    } else {
+      console.log(chalk.gray("No git files found to remove"));
+    }
+    
+  } catch (error) {
+    console.log(chalk.yellow(`Warning: Failed to clean up git files: ${error.message}`));
   }
 }
 

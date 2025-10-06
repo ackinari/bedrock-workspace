@@ -106,5 +106,5 @@ The workspace comes pre-configured with:
 ## Links
 
 - [GitHub Repository](https://github.com/ackinari/bedrock-workspace)
-- [npm Package](https://www.npmjs.com/package/@akinari/bedrock-workspace)
+- [npm Package](https://www.npmjs.com/package/@ackinari/bedrock-workspace)
 - [Issues](https://github.com/ackinari/bedrock-workspace/issues)

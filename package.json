@@ -1,5 +1,5 @@
 {
-  "name": "@akinari/bedrock-workspace",
+  "name": "@ackinari/bedrock-workspace",
   "version": "1.0.0",
   "description": "CLI utility to initialize the bedrock-workspace.",
   "author": "aKiNaRi",
@@ -7,7 +7,7 @@
   "main": "src/index.js",
   "type": "module",
   "bin": {
-    "bedrock-workspace": "./bin/init.js"
+    "bedrock-workspace": "bin/init.js"
   },
   "scripts": {
     "init": "node ./bin/init.js",
@@ -28,10 +28,10 @@
     "javascript",
     "workspace",
     "development"
-],
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ackinari/bedrock-workspace.git"
+    "url": "git+https://github.com/ackinari/bedrock-workspace.git"
   },
   "bugs": {
     "url": "https://github.com/ackinari/bedrock-workspace/issues"
